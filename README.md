@@ -11,6 +11,9 @@ SSH Client for PHP.
 ## Namespace
 > hexpang\Client\SSHClient
 
+## Require
+> [SSH2](https://pecl.php.net/package/ssh2)
+
 ## Usage
 
 ```
