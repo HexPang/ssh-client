@@ -17,6 +17,7 @@ class SSHClient
     var $port;
     var $user;
     var $password;
+    
     public function __construct($host,$port,$user,$password = "")
     {
         $this->host = $host;
@@ -33,10 +34,12 @@ class SSHClient
         }
         return $succ;
     }
+
     public function disconnect(){
         $this->cmd('exit');
         return true;
     }
+
     public function connect(){
         if(!$this->Ping($this->host,$this->port)){
             return false;
@@ -47,10 +50,12 @@ class SSHClient
         }
         return true;
     }
+
     public function authorizeWithPK($publicKeyFile,$privateKeyFile,$passphrase = ''){
       if(!$this->handle) return false;
       return @ssh2_auth_pubkey_file( $this->handle, $this->user, $publicKeyFile, $privateKeyFile, $passphrase);
     }
+
     public function authorize(){
         if(!$this->handle) return false;
         return @ssh2_auth_password( $this->handle, $this->user, $this->password );
@@ -62,12 +67,15 @@ class SSHClient
     // public function PublicKeyList(){
     //     return ssh2_publickey_list($this->pkey);
     // }
+
     public function scp_send($local_file,$remote_file,$create_mode = 0644){
       return $this->handle ? ssh2_scp_send($this->handle, $local_file, $remote_file, $create_mode) : false;
     }
+
     public function scp_recv($remote_file,$local_file){
       return $this->handle ? ssh2_scp_recv($this->handle, $remote_file, $local_file) : false;
     }
+
     public function cmd($command){
         if(!$this->handle) return false;
         $stream = @ssh2_exec($this->handle, $command);
