@@ -12,6 +12,7 @@ class SSHClient
 {
     var $handle;
     var $pkey;
+    var $error;
     var $host;
     var $port;
     var $user;
@@ -75,10 +76,10 @@ class SSHClient
             stream_set_blocking($stream, true);
             stream_set_blocking($errorStream, true);
             $response = stream_get_contents( $stream );
-            $errorInfo = stream_get_contents( $errorStream );
+            $this->$error = stream_get_contents( $errorStream );
             fclose( $stream );
             fclose( $errorStream );
-            return [$response,$errorInfo];
+            return $response;
         }else{
             return null;
         }
