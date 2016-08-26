@@ -24,7 +24,7 @@ class SSHClient
         $this->password = $password;
     }
 
-    function Ping($host,$port = 22,$waitTimeoutInSeconds = 10){
+    function ping($host,$port = 22,$waitTimeoutInSeconds = 10){
         $succ = false;
         if($fp = @fsockopen($host,$port,$errCode,$errStr,$waitTimeoutInSeconds)){
             $succ = true;
@@ -32,11 +32,11 @@ class SSHClient
         }
         return $succ;
     }
-    public function Disconnect(){
-        $this->Execute('exit');
+    public function disconnect(){
+        $this->cmd('exit');
         return true;
     }
-    public function Connect(){
+    public function connect(){
         if(!$this->Ping($this->host,$this->port)){
             return false;
         }
@@ -46,22 +46,28 @@ class SSHClient
         }
         return true;
     }
-    public function AuthorizeWithPublicKey($publicKeyFile,$privateKeyFile,$passphrase = ''){
+    public function authorizeWithPK($publicKeyFile,$privateKeyFile,$passphrase = ''){
       if(!$this->handle) return false;
       return @ssh2_auth_pubkey_file( $this->handle, $this->user, $publicKeyFile, $privateKeyFile, $passphrase);
     }
-    public function Authorize(){
+    public function authorize(){
         if(!$this->handle) return false;
         return @ssh2_auth_password( $this->handle, $this->user, $this->password );
     }
-    public function PublicKeyInit(){
-        $this->pkey = ssh2_publickey_init($this->handle);
-        return $this->pkey;
+    // public function PublicKeyInit(){
+    //     $this->pkey = ssh2_publickey_init($this->handle);
+    //     return $this->pkey;
+    // }
+    // public function PublicKeyList(){
+    //     return ssh2_publickey_list($this->pkey);
+    // }
+    public function scp_send($local_file,$remote_file,$create_mode = 0644){
+      return $this->handle ? ssh2_scp_send($this->handle, $local_file, $remote_file, $create_mode) : false;
     }
-    public function PublicKeyList(){
-        return ssh2_publickey_list($this->pkey);
+    public function scp_recv($remote_file,$local_file){
+      return $this->handle ? ssh2_scp_recv($this->handle, $remote_file, $local_file) : false;
     }
-    function Execute($command){
+    public function cmd($command){
         if(!$this->handle) return false;
         $stream = @ssh2_exec($this->handle, $command);
         if($stream){
@@ -76,9 +82,5 @@ class SSHClient
         }else{
             return null;
         }
-    }
-
-    protected static function getFacadeAccessor() {
-        return 'SSH';
     }
 }
