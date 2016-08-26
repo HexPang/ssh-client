@@ -8,6 +8,9 @@ SSH Client for PHP.
 ## Install With Composer
 > composer require hexpang/ssh-client
 
+## Namespace
+> hexpang\Client\SSHClient
+
 ## Usage
 
 ```
