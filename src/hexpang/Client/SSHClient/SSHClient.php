@@ -45,10 +45,13 @@ class SSHClient
         }
         return true;
     }
+    public function AuthorizeWithPublicKey($publicKeyFile,$privateKeyFile,$passphrase = ''){
+      if(!$handle) return false;
+      return @ssh2_auth_pubkey_file( $this->handle, $this->user, $publicKeyFile, $privateKeyFile, $passphrase);
+    }
     public function Authorize(){
         if(!$handle) return false;
-        $ret = @ssh2_auth_password( $this->handle, $this->user, $this->password );
-        return $ret;
+        return @ssh2_auth_password( $this->handle, $this->user, $this->password );
     }
     function Execute($command){
         if(!$handle) return false;
