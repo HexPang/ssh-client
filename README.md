@@ -14,8 +14,18 @@ SSH Client for PHP.
 ## Usage
 
 ```
-use SSH;
-$ssh = new SSH($host,$port,$username,$password);
+require_once 'path_to/vendor/autoload.php';
+use hexpang\Client\SSHClient\SSHClient;
+$client = new SSHClient($host,$port,$username,$password);
+if($client->ping($host,$port,10)){
+  if($client->Connect() && $client->Authorize()){
+    var_dump($client->Execute('ls -l'));
+  }else{
+    echo "Oops.";
+  }  
+}else{
+  echo "Ping Timeout!";
+}
 ```
 
 ## Method
