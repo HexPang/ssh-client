@@ -87,7 +87,7 @@ class SSHClient
             stream_set_blocking($stream, true);
             stream_set_blocking($errorStream, true);
             $response = stream_get_contents( $stream );
-            $this->$error = stream_get_contents( $errorStream );
+            $this->error = stream_get_contents( $errorStream );
             fclose( $stream );
             fclose( $errorStream );
             return $response;
