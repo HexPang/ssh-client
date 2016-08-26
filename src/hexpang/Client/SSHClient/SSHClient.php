@@ -11,11 +11,12 @@ namespace hexpang\Client\SSHClient;
 class SSHClient
 {
     var $handle;
+    var $pkey;
     var $host;
     var $port;
     var $user;
     var $password;
-    public function __construct($host,$port,$user,$password)
+    public function __construct($host,$port,$user,$password = "")
     {
         $this->host = $host;
         $this->port = $port;
@@ -46,15 +47,22 @@ class SSHClient
         return true;
     }
     public function AuthorizeWithPublicKey($publicKeyFile,$privateKeyFile,$passphrase = ''){
-      if(!$handle) return false;
+      if(!$this->handle) return false;
       return @ssh2_auth_pubkey_file( $this->handle, $this->user, $publicKeyFile, $privateKeyFile, $passphrase);
     }
     public function Authorize(){
-        if(!$handle) return false;
+        if(!$this->handle) return false;
         return @ssh2_auth_password( $this->handle, $this->user, $this->password );
     }
+    public function PublicKeyInit(){
+        $this->pkey = ssh2_publickey_init($this->handle);
+        return $this->pkey;
+    }
+    public function PublicKeyList(){
+        return ssh2_publickey_list($this->pkey);
+    }
     function Execute($command){
-        if(!$handle) return false;
+        if(!$this->handle) return false;
         $stream = @ssh2_exec($this->handle, $command);
         if($stream){
             $errorStream = ssh2_fetch_stream($stream, SSH2_STREAM_STDERR);
