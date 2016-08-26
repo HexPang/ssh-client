@@ -17,7 +17,7 @@ class SSHClient
     var $port;
     var $user;
     var $password;
-    
+
     public function __construct($host,$port,$user,$password = "")
     {
         $this->host = $host;
@@ -51,8 +51,11 @@ class SSHClient
         return true;
     }
 
-    public function authorizeWithPK($publicKeyFile,$privateKeyFile,$passphrase = ''){
+    public function authorizeWithPK($privateKeyFile,$publicKeyFile = '',$passphrase = ''){
       if(!$this->handle) return false;
+      if($publicKeyFile == ''){
+        $publicKeyFile = $privateKeyFile . '.pub';
+      }
       return @ssh2_auth_pubkey_file( $this->handle, $this->user, $publicKeyFile, $privateKeyFile, $passphrase);
     }
 
