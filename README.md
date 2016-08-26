@@ -21,8 +21,8 @@ require_once 'path_to/vendor/autoload.php';
 use hexpang\Client\SSHClient\SSHClient;
 $client = new SSHClient($host,$port,$username,$password);
 if($client->ping($host,$port,10)){
-  if($client->Connect() && $client->Authorize()){
-    var_dump($client->Execute('ls -l'));
+  if($client->connect() && $client->authorize()){
+    var_dump($client->cmd('ls -l'));
   }else{
     echo "Oops.";
   }  
@@ -34,8 +34,11 @@ if($client->ping($host,$port,10)){
 ## Method
 | Method | Description | Usage |
 | ------ | ----------- | ----- |
-| Ping | Check port | $ssh->ping($host,$port,$timeOut)
-| Connect | Connect to server | $ssh->Connect() |
-| Authorize | Authorize | $ssh->Authorize() |
-| Disconnect | Disconnect | $ssh->Disconnect() |
-| Execute | Execute command and response result for an array[ Response,Error ] | $ssh->Execute($command) |
+| ping | Check port | $ssh->ping($host,$port,$timeOut)
+| connect | Connect to server | $ssh->connect() |
+| authorize | Authorize | $ssh->authorize() |
+| authorizeWithPK | Authorize With Public Key | $ssh->authorizeWithPK('id_rsa.pub','id_rsa','passphrase') |
+| cmd | Execute command and response result for an array[ Response,Error ] | $ssh->cmd($command) |
+| scp_send | Send file via SCP Protocol | $client->scp_send($local_file,$remote_file,$create_mode = 644) |
+| scp_recv | Receive file via SCP Protocol | $client->scp_recv($remote_file,$local_file) |
+| disconnect | Disconnect | $ssh->disconnect() |
